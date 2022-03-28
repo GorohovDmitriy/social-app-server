@@ -1,30 +1,18 @@
-const UserList = require("../../db");
-const _ = require("lodash");
+const axios = require("axios");
 
 module.exports = {
-  createUser: (parent, args) => {
-    const user = args.input;
-    user.id = Date.now();
-    UserList.push(user);
+  createUser: async (parent, args) => {
+    try {
+      const values = args.input;
 
-    return user;
-  },
+      await axios.post("http://localhost:5000/users/create", values);
 
-  updateUser: (parent, args) => {
-    const { id, newFirstName, newLastName, newImage, newPosition } = args.input;
-    let userUpdate;
-
-    UserList.forEach((user) => {
-      if (user.id === Number(id)) {
-        user.firstName = newFirstName;
-        user.lastName = newLastName;
-        user.position = newPosition;
-        user.image = newImage;
-
-        userUpdate = user;
-      }
-    });
-
-    return userUpdate;
+      return {
+        ...values,
+        id: Date.now(),
+      };
+    } catch (error) {
+      console.log(error);
+    }
   },
 };

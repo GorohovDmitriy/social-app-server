@@ -1,13 +1,13 @@
-const UserList = require("../../db");
-const _ = require("lodash");
+const axios = require("axios");
 
 module.exports = {
-  users: () => {
-    return UserList;
-  },
+  users: async () => {
+    try {
+      const { data } = await axios.get("http://localhost:5000/users");
 
-  user: (parent, args) => {
-    const user = _.find(UserList, { id: Number(args.id) });
-    return user;
+      return data;
+    } catch (err) {
+      console.log(err);
+    }
   },
 };
