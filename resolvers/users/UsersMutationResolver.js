@@ -1,30 +1,11 @@
-const UserList = require("../../db");
-const _ = require("lodash");
+const { getDocs, addDoc } = require("firebase/firestore");
+const Users = require("../../firebase/config");
 
 module.exports = {
-  createUser: (parent, args) => {
+  createUser: async (parent, args) => {
     const user = args.input;
-    user.id = Date.now();
-    UserList.push(user);
+    await addDoc(Users, user);
 
     return user;
-  },
-
-  updateUser: (parent, args) => {
-    const { id, newFirstName, newLastName, newImage, newPosition } = args.input;
-    let userUpdate;
-
-    UserList.forEach((user) => {
-      if (user.id === Number(id)) {
-        user.firstName = newFirstName;
-        user.lastName = newLastName;
-        user.position = newPosition;
-        user.image = newImage;
-
-        userUpdate = user;
-      }
-    });
-
-    return userUpdate;
   },
 };
